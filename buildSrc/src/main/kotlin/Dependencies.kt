@@ -23,6 +23,7 @@ object AndroidConfig {
 
 object Dependencies {
     private const val RXJAVA_VER = "2.2.21"
+    private const val EXOPLAYER_VER = "2.12.0"
 
     const val HILT_ANDROID = "com.google.dagger:hilt-android:${Version.HILT}"
     const val HILT_ANDROID_COMPILER = "com.google.dagger:hilt-android-compiler:${Version.HILT}"
@@ -34,6 +35,10 @@ object Dependencies {
     const val CORE_KTX = "androidx.core:core-ktx:1.6.0"
     const val MATERIAL = "com.google.android.material:material:1.4.0"
     const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:2.1.0"
+
+    const val EXOPLAYER = "com.google.android.exoplayer:exoplayer-core:$EXOPLAYER_VER"
+    const val EXOPLAYER_DASH = "com.google.android.exoplayer:exoplayer-dash:$EXOPLAYER_VER"
+    const val EXOPLAYER_UI = "com.google.android.exoplayer:exoplayer-ui:$EXOPLAYER_VER"
 
 //    const val RXJAVA = "io.reactivex.rxjava2:rxjava:$RXJAVA_VER"
 //    const val RX_ANDROID = "io.reactivex.rxjava2:rxandroid:2.1.1"
