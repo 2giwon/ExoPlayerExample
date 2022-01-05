@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ExoPlayerExample</string>
+    <string name="streaming_url">"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"</string>
 </resources>
