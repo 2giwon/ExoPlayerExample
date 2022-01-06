@@ -9,7 +9,6 @@ import com.egiwon.exoplayerexample.databinding.ItemVideoBinding
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.util.MimeTypes
 
 class VideoViewHolder(
@@ -17,7 +16,7 @@ class VideoViewHolder(
     parent: ViewGroup
 ): RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(layoutResId, parent, false)
-), VideoAdapter.StopAction {
+), VideoAdapter.VideoAdapterAction {
     private val binding by lazy(LazyThreadSafetyMode.NONE) {
         ItemVideoBinding.bind(itemView)
     }
@@ -25,40 +24,50 @@ class VideoViewHolder(
     private val context: Context by lazy { binding.root.context }
 
     private var player: SimpleExoPlayer? = null
-    private lateinit var trackSelector: DefaultTrackSelector
+
+    private var url: String = ""
 
     fun onBind(item: String) {
+        url = item
+        initPlayer()
+    }
+
+    private fun initPlayer() {
+
         player = SimpleExoPlayer.Builder(context)
             .build()
             .also { exoPlayer ->
                 binding.videoView.player = exoPlayer
 
                 val mediaItem = MediaItem.Builder()
-                    .setUri(item)
+                    .setUri(url)
                     .setMimeType(MimeTypes.APPLICATION_MP4)
                     .build()
 
-
                 exoPlayer.setMediaItem(mediaItem)
-                initPlayer(exoPlayer)
+                exoPlayer.currentTrackGroups
+                exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
+                exoPlayer.playWhenReady = true
+                exoPlayer.prepare()
             }
     }
 
-    private fun initPlayer(exoPlayer: SimpleExoPlayer) {
-        trackSelector = DefaultTrackSelector(context)
-        trackSelector.setParameters(trackSelector.buildUponParameters().setMaxVideoSize(959, 539))
-
-        exoPlayer.playWhenReady = true
-        exoPlayer.currentTrackGroups
-        exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
-        exoPlayer.prepare()
-    }
-
     private fun releasePlayer() {
-        binding.videoView.player?.release()
+        player?.release()
+        player = null
     }
 
     override fun onReleasePlayer() {
+        releasePlayer()
+    }
+
+    override fun onPlay() {
+        if (player == null) {
+            initPlayer()
+        }
+    }
+
+    fun onStop() {
         releasePlayer()
     }
 }

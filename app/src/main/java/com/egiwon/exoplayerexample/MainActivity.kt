@@ -1,6 +1,7 @@
 package com.egiwon.exoplayerexample
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,13 +17,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
 
-        viewBinding.rvVideos.adapter = VideoAdapter(R.layout.item_video)
-        viewBinding.rvVideos.setHasFixedSize(true)
-
         val list = mutableListOf<String>()
         for (i in 0 until 10) {
             list.add(resources.getString(R.string.streaming_url))
         }
+
+        viewBinding.rvVideos.adapter = VideoAdapter(R.layout.item_video)
+        viewBinding.rvVideos.setHasFixedSize(true)
+        viewBinding.rvVideos.addItemDecoration(VideoItemDecoration())
+        viewBinding.rvVideos.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val firstIndex = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+                val lastIndex = (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+
+                for (i in list.indices) {
+                    if (i in firstIndex..lastIndex) {
+                        getVideoAdapter()?.playVideo(i)
+                    }
+                }
+            }
+        })
 
         getVideoAdapter()?.replaceItems(list)
     }
