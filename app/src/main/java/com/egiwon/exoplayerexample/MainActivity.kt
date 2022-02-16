@@ -29,25 +29,12 @@ class MainActivity : AppCompatActivity() {
 
         viewBinding.rvVideos.setHasFixedSize(true)
         viewBinding.rvVideos.addItemDecoration(VideoItemDecoration())
-//        viewBinding.rvVideos.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//                val firstIndex = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
-//                val lastIndex = (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
-//
-//                for (i in list.indices) {
-//                    if (i in firstIndex..lastIndex) {
-//                        getVideoAdapter()?.playVideo(i)
-//                    }
-//                }
-//            }
-//        })
 
         getVideoAdapter()?.replaceItems(list)
     }
 
     override fun onPause() {
-
+        getVideoAdapter()?.releaseAllVideo()
         super.onPause()
     }
 

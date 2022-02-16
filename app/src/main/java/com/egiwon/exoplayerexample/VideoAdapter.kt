@@ -8,10 +8,19 @@ class VideoAdapter(
     @LayoutRes private val layoutResId: Int
 ): RecyclerView.Adapter<VideoViewHolder>() {
 
+    interface VideoAdapterAction {
+        fun onReleasePlayer()
+        fun onPlay()
+    }
+
     private val list = mutableListOf<String>()
 
+    private val videoActionList = mutableListOf<VideoAdapterAction>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
-        return VideoViewHolder(layoutResId, parent)
+        val holder = VideoViewHolder(layoutResId, parent)
+        videoActionList.add(holder)
+        return holder
     }
 
     override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
@@ -33,6 +42,12 @@ class VideoAdapter(
     override fun onViewRecycled(holder: VideoViewHolder) {
         super.onViewRecycled(holder)
         holder.onReleasePlayer()
+    }
+
+    fun releaseAllVideo() {
+        videoActionList.forEach {
+            it.onReleasePlayer()
+        }
     }
 
     @Suppress("NotifyDataSetChanged")
