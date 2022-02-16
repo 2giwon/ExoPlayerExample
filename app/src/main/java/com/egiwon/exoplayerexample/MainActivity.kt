@@ -13,6 +13,8 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
+    private lateinit var layoutManager: LinearLayoutManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
@@ -23,28 +25,30 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewBinding.rvVideos.adapter = VideoAdapter(R.layout.item_video)
+        layoutManager = viewBinding.rvVideos.layoutManager as LinearLayoutManager
+
         viewBinding.rvVideos.setHasFixedSize(true)
         viewBinding.rvVideos.addItemDecoration(VideoItemDecoration())
-        viewBinding.rvVideos.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val firstIndex = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
-                val lastIndex = (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
-
-                for (i in list.indices) {
-                    if (i in firstIndex..lastIndex) {
-                        getVideoAdapter()?.playVideo(i)
-                    }
-                }
-            }
-        })
+//        viewBinding.rvVideos.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                val firstIndex = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+//                val lastIndex = (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+//
+//                for (i in list.indices) {
+//                    if (i in firstIndex..lastIndex) {
+//                        getVideoAdapter()?.playVideo(i)
+//                    }
+//                }
+//            }
+//        })
 
         getVideoAdapter()?.replaceItems(list)
     }
 
-    override fun onStop() {
-        super.onStop()
-        getVideoAdapter()?.releaseVideo()
+    override fun onPause() {
+
+        super.onPause()
     }
 
     private fun getVideoAdapter(): VideoAdapter? = viewBinding.rvVideos.adapter as? VideoAdapter

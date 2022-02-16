@@ -16,7 +16,7 @@ class VideoViewHolder(
     parent: ViewGroup
 ): RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(layoutResId, parent, false)
-), VideoAdapter.VideoAdapterAction {
+) {
     private val binding by lazy(LazyThreadSafetyMode.NONE) {
         ItemVideoBinding.bind(itemView)
     }
@@ -53,15 +53,16 @@ class VideoViewHolder(
     }
 
     private fun releasePlayer() {
+        player?.stop()
         player?.release()
         player = null
     }
 
-    override fun onReleasePlayer() {
+    fun onReleasePlayer() {
         releasePlayer()
     }
 
-    override fun onPlay() {
+    fun onPlay() {
         if (player == null) {
             initPlayer()
         }
